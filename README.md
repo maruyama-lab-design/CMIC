@@ -1,3 +1,5 @@
+This software work with torchtext (version 0.8.1). 
+
 1. Suppose that 
 m.fasta and u.fasta is your original FASTA files of methylated and unmethylated 
 sequences.  

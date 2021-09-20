@@ -3,10 +3,14 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from torchtext.legacy import data
-from torchtext.legacy.data import Field
-from torchtext.legacy.data import TabularDataset
-from torchtext.legacy.data import Iterator, BucketIterator
+# from torchtext.legacy import data
+from torchtext import data
+# from torchtext.legacy.data import Field
+from torchtext.data import Field
+# from torchtext.legacy.data import TabularDataset
+from torchtext.data import TabularDataset
+# from torchtext.legacy.data import Iterator, BucketIterator
+from torchtext.data import Iterator, BucketIterator
 
 from torchtext.vocab import Vectors
 
@@ -208,14 +212,24 @@ def train(model, iterator, optimizer, criterion):
     # set the model in training phase
     model.train()
 
-    for batch in iterator:
+    print("train: batch:")
+    # for batch in iterator:
+    for (index, batch) in enumerate(iterator):
+        print("{}".format(index), end=" ")
         optimizer.zero_grad() # resets the gradients
+        print("point:train:1")
         text, text_lengths = batch.CGI_seq # get text and the number of words
+        print("point:train:2")
         predictions = model(text, text_lengths).squeeze()         # convert to 1D tensor
+        print("point:train:3")
         loss = criterion(predictions, batch.Label) 
+        print("point:train:4")
         acc, pred, recall, F, FPR = performance(predictions, batch.Label)
+        print("point:train:5")
         loss.backward()  # The loss is backpropaged, and the gradients are computed. 
+        print("point:train:6")
         optimizer.step() # the weights are updated. 
+        print("point:train:7")
 
         # loss and performance scores
         epoch_loss += loss.item()
@@ -224,6 +238,7 @@ def train(model, iterator, optimizer, criterion):
         epoch_recall += recall
         epoch_F += F
         epoch_FPR += FPR
+        print("point:train:8")
 
         # print('Train batch')
         # torch.save(model, 'saved_weights.pkl')
@@ -367,10 +382,15 @@ def starttrain(allcgikmercsv, traincsv, vldcsv, modelpath, emd, Epoch, hidden_no
     # read in pretrained embedding vector
     nm = 'dna2vec.txt'
     c = csvpath + '/'
+    print(c)
 
+    print("point1")
     vectors = Vectors(name=nm, cache=c)
+    print("point2")
     TEXT.build_vocab(allcgi, vectors=vectors)
+    print("point3")
     LABEL.build_vocab(trn)
+    print("point4")
     vo = len(TEXT.vocab)
     print("Size of TEXT vocabulary:", len(TEXT.vocab))
     print("Size of LABEL vocabulary:", len(LABEL.vocab))
@@ -479,10 +499,11 @@ def starttrain(allcgikmercsv, traincsv, vldcsv, modelpath, emd, Epoch, hidden_no
 
     best_valid_loss = float('inf')
     for epoch in range(N_EPOCHS):
-        print('Strat train epoch =', epoch)
-        # 训练模型
+        # print('Start train epoch =', epoch)
+        print('Start train: epoch={}'.format(epoch))
         train_loss, train_acc, train_pre, train_recall, train_F, train_FPR = train(model, train_iter, optimizer,
                                                                                    criterion)
+        print('End train: epoch={}'.format(epoch))
         all_losses.append(train_loss)
         all_train_acc.append(train_acc)
         all_train_pre.append(train_pre)
@@ -570,7 +591,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--filetitle', help='title of result file', default='5fcv')
 
-    parser.add_argument('--input_dir', help='It looks like FGO2PB/2021-09-06')
+    parser.add_argument('--input_dir', help='It looks like data-FGO2BM/2021-09-06')
 
     args = parser.parse_args()
 
@@ -615,7 +636,7 @@ if __name__ == '__main__':
     for c in range(len(all_kind)):
         kind = all_kind[c]
 
-        print('---------------- strat training model for ' + str(kind) + '----------------')
+        print('---------------- Start training model for ' + str(kind) + '----------------')
 
         # csvpath = rootpath + args.cell_type + '_rc_' + str(args.N) + '_' + str(args.mode) + '_' + kind
         csvpath = os.path.join(rootpath, args.cell_type + '_rc_' + str(args.N) + '_' + str(args.mode) + '_' + kind)
@@ -656,6 +677,7 @@ if __name__ == '__main__':
         datasets = [df1, df2, df3, df4, df5]
         vldcsv = csvpath + '/5fcv_vld.csv'
         traincsv = csvpath + '/5fcv_train.csv'
+
 
         for i, v in enumerate(datasets):
             # use 3 for train, 1 for vld
