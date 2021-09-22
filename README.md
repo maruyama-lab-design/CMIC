@@ -1,4 +1,8 @@
-This software work with torchtext (version 0.8.1). 
+This version is developed under the configuration:
+python 3.6.10
+pytorch 1.5.0
+torchtext　0.6.0
+
 
 1. Suppose that 
 m.fasta and u.fasta is your original FASTA files of methylated and unmethylated 
