@@ -2,6 +2,10 @@ This version is developed under the configuration:
 python 3.6.10
 pytorch 1.5.0
 torchtext　0.6.0
+cuda 10.2
+cuDNN 7.6.4
+
+
 
 
 1. Suppose that 
