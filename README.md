@@ -118,3 +118,18 @@ optional arguments:
                         
   --test_long TEST_LONG
                         Once trained models are obtained, this option is used to test longer CGIs. (default: False)
+
+
+
+# packages in environment:
+#
+# Name                    Version                   Build  Channel
+cudatoolkit               11.3.1               h2bc3f7f_2  
+gensim                    4.1.2            py39h295c915_0  
+numpy                     1.21.5           py39he7a7128_1  
+pandas                    1.4.2            py39h295c915_0    anaconda
+python                    3.9.12               h12debd9_0  
+pytorch                   1.11.0          py3.9_cuda11.3_cudnn8.2.0_0    pytorch
+scikit-learn              1.0.2            py39h51133e4_1    anaconda
+scipy                     1.7.3            py39hc147768_0  
+tqdm                      4.64.0             pyhd8ed1ab_0    conda-forge
