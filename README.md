@@ -122,8 +122,7 @@ optional arguments:
 
 
 # packages in environment:
-#
-# Name                    Version                   Build  Channel
+Name                    Version                   Build  Channel
 cudatoolkit               11.3.1               h2bc3f7f_2  
 gensim                    4.1.2            py39h295c915_0  
 numpy                     1.21.5           py39he7a7128_1  
