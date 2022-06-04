@@ -125,11 +125,11 @@ optional arguments:
 | Name |                   Version |
 | ---- | ---- |
 | cudatoolkit   |            11.3.1 |             
-gensim                    4.1.2           
-numpy                     1.21.5          
-pandas                    1.4.2           
-python                    3.9.12         
-pytorch                   1.11.0        
-scikit-learn              1.0.2       
-scipy                     1.7.3      
-tqdm                      4.64.0    
+gensim     |              4.1.2           
+numpy        |             1.21.5          
+pandas      |              1.4.2           
+python      |              3.9.12         
+pytorch      |             1.11.0        
+scikit-learn |             1.0.2       
+scipy       |              1.7.3      
+tqdm        |              4.64.0    
