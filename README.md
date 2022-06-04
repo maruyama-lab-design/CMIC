@@ -11,13 +11,17 @@ and optionally
 'startpos' (start position). 
 Our input dataset and Bock2006 dataset are in the data directory of this Github repository. 
 
-The next command generates files in 
-a directory like, k4_12_aug1000_v20_w10_e10_a0.025_mina0.0001_stride0, 
+The next command generates files, 
+input_data.csv, 
+w2v_input.txt, 
+word2vec.model, and 
+word2vec.txt, 
+in a directory like, k4_12_aug1000_v20_w10_e10_a0.025_mina0.0001_stride0, 
 under the specified or default directory. 
 
 $python splitDNA2vec.py your_input_file.csv word2vec [options]
 
-Some of the outputted files are taken as input to CMIC2. 
+Among the output files, input_data.csv and word2vec.model are taken as input to CMIC2. 
 
 usage: splitDNA2vec.py [-h] [-o OUT_DIR] [-m M_LOWER_BOUND] [-u U_UPPER_BOUND] [-random_kmer RANDOM_KMER] [-kmin K_MIN] [-kmax K_MAX] [--stride STRIDE] [-rc RC] [-aug AUG_NUM]
                        [-mcnt MIN_COUNT] [-v VEC_SIZE] [-w WINDOW] [-e EPOCH] [-a ALPHA] [-ma MIN_ALPHA] [--data_type DATA_TYPE] [-shuffle SHUFFLE_INPUT]
@@ -82,7 +86,7 @@ optional arguments:
 
 
 
-2. CMIC 
+1. CMIC 
 
 $python cmic2.py path_to_output_directory_of_splitDNA2vec [options]
 
