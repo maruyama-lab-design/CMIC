@@ -86,7 +86,7 @@ optional arguments:
 
 
 
-1. CMIC 
+2. CMIC 
 
 $python cmic2.py path_to_output_directory_of_splitDNA2vec [options]
 
