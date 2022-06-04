@@ -121,7 +121,8 @@ optional arguments:
 
 
 
-# packages in environment:
+# Packages in environment:
+
 | Name |                   Version |
 | ---- | ---- |
 | cudatoolkit   |            11.3.1 |             
