@@ -104,30 +104,43 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
+
   -o OUTPUT, --output OUTPUT
                         specify the output file name (default: output.csv)
+
   --seq_max_len SEQ_MAX_LEN
                         The longer sequences are excluded. (default: 500)
+
   -r RNN_TYPE, --RNN_type RNN_TYPE
                         RNN, BiRNN, GRU, BiGRU, LSTM, BiLSTM (default: BiGRU)
+
   --embedding_freeze EMBEDDING_FREEZE
                         The embedding vectors are not updated. (default: True)
+
   --shuffle_wv SHUFFLE_WV
                         The word2vec mapping from k-mers to embedding vecotrs are shuffled before initializing the
                         embedding layer. (default: False)
+
   --debug_mode DEBUG_MODE
                         Obsolete. (default: False)
+
   --test_long TEST_LONG
                         Once trained models are obtained, this option is used to test longer CGIs. (default: False)
+
   --hidden_vec_dim HIDDEN_VEC_DIM
                         The hidden vector dimension of RNN type layer (default: 256)
+
   --epochs EPOCHS       The number of epochs (default: 2)
+
   --learning_rate LEARNING_RATE
                         Learning rate (default: 0.001)
+
   --batch_size BATCH_SIZE
                         The batch size (default: 32)
+
   --dropout_rate DROPOUT_RATE
                         Dropout rate (default: 0.5)
+                        
   --weight_decay WEIGHT_DECAY
                         weight decay of optimizer Adam (default: 0.01)
 
