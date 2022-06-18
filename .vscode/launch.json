@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "CMIC2: test run",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": ["/home/om/OneDrive/work/methyl/source_data/cgi_methyl_fgo_blastocyst-maternal_unmethyl-pos/test/k4_12_aug600_v20_w10_e10_a0.025_mina0.0001_stride0", 
+               "-o", "debug.csv"
+            ] 
+        },
+    ]
+}

@@ -76,7 +76,7 @@ def makeDataLoader(instance_indexes, amp, input_data, wv, batch_size, collate_fn
     return data_loader
 
 class Classifier(nn.Module):
-    def __init__(self, wv, embedding_dim, hidden_dim, output_dim, n_layers,
+    def __init__(self, wv, embedding_dim, hidden_vec_dim, output_dim, n_layers,
                  bidirectional, dropout, embedding_freeze):
         super().__init__()
         """wv is supposed to hold vectors, key_to_index, and index_to_key."""
@@ -88,12 +88,12 @@ class Classifier(nn.Module):
 
         self.embedding = nn.Embedding.from_pretrained(word_vectors, freeze=embedding_freeze) 
         self.gru = nn.GRU(embedding_dim,
-                          hidden_dim,
+                          hidden_vec_dim,
                           num_layers=n_layers,
                           bidirectional=bidirectional, 
                           dropout=dropout,
                           batch_first=True)
-        self.fc = nn.Linear(hidden_dim * 2, output_dim) # fully connect layer
+        self.fc = nn.Linear(hidden_vec_dim * 2, output_dim) # fully connect layer
         self.act = nn.Sigmoid() # activate function
 
     def forward(self, index_seq):
@@ -448,7 +448,14 @@ class OutputDataFrame:
 
 
 def execute_KFoldCV(data_dir, exp_type_label="NA", seq_max_len=500, RNN_type="BiGRU", embedding_freeze=True, 
-    shuffle_wv=False, debug_mode=False, test_long=False):
+    shuffle_wv=False, debug_mode=False, test_long=False, 
+    hidden_vec_dim=254, 
+    dropout_rate=0.5,
+    epochs=2, 
+    batch_size=32,
+    lr=10e-4,
+    weight_decay=0.01
+    ):
 
     """
     To-Do: 
@@ -477,12 +484,14 @@ def execute_KFoldCV(data_dir, exp_type_label="NA", seq_max_len=500, RNN_type="Bi
     bidirectional = True
 
     embedding_dim = wv.vector_size 
-    num_hidden_nodes = 256
-    epoch = 2
-    lr = 10e-4 
-    batch_size = 32
-    dropout = 0.5
-    decay = 0.01
+    
+    
+    # hidden_vec_dim = 256
+    # epochs = 2
+    # lr = 10e-4 
+    # batch_size = 32
+    # dropout_rate = 0.5
+    # weight_decay = 0.01
 
     n_splits = 3 # 3-fold cross-validation.
 
@@ -491,16 +500,16 @@ def execute_KFoldCV(data_dir, exp_type_label="NA", seq_max_len=500, RNN_type="Bi
         np.random.shuffle(wv.vectors)
 
     if debug_mode:
-        epoch = 2
+        epochs = 2
         n_splits = 2
 
     output_df.set("type", exp_type_label)
     output_df.set("embedding_vector_size", embedding_dim)
-    output_df.set("epoch", epoch)
-    output_df.set("hidden_nodes", num_hidden_nodes)
-    output_df.set("dropout", dropout)
+    output_df.set("epochs", epochs)
+    output_df.set("hidden_nodes", hidden_vec_dim)
+    output_df.set("dropout", dropout_rate)
     output_df.set("learning_ratio", lr)
-    output_df.set("weight_decay", decay)
+    output_df.set("weight_decay", weight_decay)
 
     ### k-fold cross-validation related part. 
     skf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=1)
@@ -521,11 +530,11 @@ def execute_KFoldCV(data_dir, exp_type_label="NA", seq_max_len=500, RNN_type="Bi
         models = []
         for fold_index in range(n_splits):
             if RNN_type == "BiGRU":
-                model = Classifier(wv, embedding_dim, num_hidden_nodes, num_output_nodes, n_layers,
-                        bidirectional, dropout, embedding_freeze).to(device)
+                model = Classifier(wv, embedding_dim, hidden_vec_dim, num_output_nodes, n_layers,
+                        bidirectional, dropout_rate, embedding_freeze).to(device)
             else:
-                model = ClassifierRNNType(wv, embedding_dim, num_hidden_nodes, num_output_nodes, n_layers,
-                        RNN_type, dropout, embedding_freeze).to(device)
+                model = ClassifierRNNType(wv, embedding_dim, hidden_vec_dim, num_output_nodes, n_layers,
+                        RNN_type, dropout_rate, embedding_freeze).to(device)
             model.load_state_dict(torch.load(os.path.join(data_dir, "trained_" + str(fold_index) + ".model")))
             models.append(model)
 
@@ -576,20 +585,20 @@ def execute_KFoldCV(data_dir, exp_type_label="NA", seq_max_len=500, RNN_type="Bi
 
     for fold_index, (train_index, test_index) in enumerate(skf.split(X, y)):
         if RNN_type == "BiGRU":
-            model = Classifier(wv, embedding_dim, num_hidden_nodes, num_output_nodes, n_layers,
-                        bidirectional, dropout, embedding_freeze).to(device)
+            model = Classifier(wv, embedding_dim, hidden_vec_dim, num_output_nodes, n_layers,
+                        bidirectional, dropout_rate, embedding_freeze).to(device)
         else:
-            model = ClassifierRNNType(wv, embedding_dim, num_hidden_nodes, num_output_nodes, n_layers,
-                    RNN_type, dropout, embedding_freeze).to(device)
-        optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=decay)
+            model = ClassifierRNNType(wv, embedding_dim, hidden_vec_dim, num_output_nodes, n_layers,
+                    RNN_type, dropout_rate, embedding_freeze).to(device)
+        optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
 
         dataloaders = []
         for instance_indexes in [train_index, test_index]: # These indexes are assigned to CGIs, not augmented k-mer sequences. 
             dl = makeDataLoader(instance_indexes, amp, input_data, wv, batch_size, collate_fn)
             dataloaders.append(dl)
         
-        for epoch_index in range(epoch):
-            print(f"Fold: {fold_index + 1}/{n_splits}, Epoch: {epoch_index + 1}/{epoch}")
+        for epoch_index in range(epochs):
+            print(f"Fold: {fold_index + 1}/{n_splits}, Epoch: {epoch_index + 1}/{epochs}")
             train_metrics = train(model, dataloaders[0], optimizer, device)
             print('Training: loss={}, balanced_accuracy={}, precision={}, recall={}, F={}, MCC={}, AUC={}'.format(
                 train_metrics[0],
@@ -641,6 +650,27 @@ if __name__ == "__main__":
     parser.add_argument('--shuffle_wv', type=bool, default=False, help="The word2vec mapping from k-mers to embedding vecotrs are shuffled before initializing the embedding layer.")
     parser.add_argument('--debug_mode', type=bool, default=False, help="Obsolete.")
     parser.add_argument('--test_long', type=bool, default=False, help="Once trained models are obtained, this option is used to test longer CGIs.")
+
+    parser.add_argument('--hidden_vec_dim', type=int, default=256, help="The hidden vector dimension of RNN type layer")
+    parser.add_argument('--epochs', type=int, default=2, help="The number of epochs")
+    parser.add_argument('--learning_rate', type=float, default=10e-4, help="Learning rate")
+    parser.add_argument('--batch_size', type=int, default=32, help="The batch size")
+
+    parser.add_argument('--dropout_rate', type=float, default=0.5, help="Dropout rate")
+    parser.add_argument('--weight_decay', type=float, default=0.01, help="weight decay of optimizer Adam")
+
+
+    # epoch = 2
+    # lr = 10e-4 
+    # batch_size = 32
+    # dropout = 0.5
+    # decay = 0.01
+
+    n_splits = 3 # 3-fold cross-validation.
+
+
+
+
     args = parser.parse_args()  
 
     # df_output = execute_KFoldCV(input_data, word2vec_model.wv)
@@ -651,7 +681,14 @@ if __name__ == "__main__":
         embedding_freeze=args.embedding_freeze, 
         shuffle_wv=args.shuffle_wv, 
         debug_mode=args.debug_mode,
-        test_long=args.test_long)
+        test_long=args.test_long,
+        hidden_vec_dim=args.hidden_vec_dim,
+        dropout_rate=args.dropout_rate,
+        epochs=args.epochs, 
+        batch_size=args.batch_size,
+        lr=args.learning_rate,
+        weight_decay=args.weight_decay
+        )
     output_filename = os.path.join(args.data_dir, args.output)
     df_output.to_csv(output_filename, mode='a', header=True)    
 
