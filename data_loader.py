@@ -24,7 +24,6 @@ def load_Bock_dataset(Bock_dataset_filename="dataset_bock.csv"):
     return df, dir_name
 
 def load_dataset(input_filename, M_lower_bound, U_upper_bound):
-    # df = pd.read_csv(args["input_file"])
     df = pd.read_csv(input_filename)
     df['label'] = -1
     # 2022-04-23. 

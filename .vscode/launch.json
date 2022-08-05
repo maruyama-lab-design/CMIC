@@ -22,5 +22,15 @@
                "-o", "debug.csv"
             ] 
         },
+        {
+            "name": "splitDNA2vec+CpGcluster",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": ["/home/om/OneDrive/work/methyl/source_data/cgi_methyl_fgo_blastocyst-maternal-CpGcluster/out_FGoocyte_and_Blastocyst_Maternal.csv", 
+                "word2vec"
+            ] 
+        },
     ]
 }

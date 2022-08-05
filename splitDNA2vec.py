@@ -255,6 +255,20 @@ def make(args):
     else:
         df_all_seq = data_loader.load_dataset(args["input_file"], args["M_lower_bound"], args["U_upper_bound"])
 
+    print(f'Before {len(df_all_seq)}')
+    #
+    # The next block has a bug that 
+    # every row has the same sequence length
+    # thoug they are different.
+    # df_all_seq["seq_len"] = len(df_all_seq['seq'])
+    # print(df_all_seq)
+    # print(df_all_seq.columns)
+    # df_all_seq = df_all_seq.query("seq_len >= 200")
+    # 
+    CGI_min_len = 200
+    df_all_seq = df_all_seq.query("endpos - startpos >= CGI_min_len")
+    print(f'After {len(df_all_seq)}')
+
     # generate input_data.csv using splitDNA2vec algorithm
     # Namely, the next code is specialized for extracting random (kmin, kmax)-mer sequences, 
     # not for generation sequences of constant length k-mer for specified multiple k values. 
@@ -309,7 +323,7 @@ if __name__ == '__main__':
     parser.add_argument('--stride', type=int, help='k-mer extraction window stride. Set 0 for splitDNA2vec. Set 1 for dna2vec mode.', default=0)
 
     parser.add_argument('-rc', '--rc', type=bool,help='Include reverse compliments or not, default=True', default=True)
-    parser.add_argument('-aug', '--aug_num', type=int, help='Number of k-mer sequences generated from the same DNA sequence, default=1000', default=1000)
+    parser.add_argument("-aug", '--aug_num', type=int, help='Number of k-mer sequences generated from the same DNA sequence, default=1000', default=1000)
 
     parser.add_argument('-mcnt', '--min_count', type=int,help='Ignores all words with total frequency lower than this.  default=1', default=1)
     parser.add_argument('-v', '--vec_size', type=int,help='Dimensionality of the word vectors', default=10)
