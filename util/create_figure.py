@@ -15,6 +15,7 @@ class Excel2Fig:
         self.remove_empty_rows()
         
         self.output_file_basename = os.path.splitext(os.path.basename(input_filename))[0].split("_", 1)[1]
+        print(self.output_file_basename)
 
     def remove_empty_rows(self):
         c = self.df.test_F_mean
@@ -54,7 +55,8 @@ class Excel2Fig:
 
         plt.grid(axis="y",ls='--')
         # plt.show()
-        fig.savefig("img_" + self.output_file_basename + "_" + measure + ".pdf")
+        # fig.savefig("img_" + self.output_file_basename + "_" + measure + ".pdf")
+        fig.savefig("img_" + self.output_file_basename + "_" + measure + ".png")
 
 if __name__  == "__main__":
     top_dir = os.path.join("~", "OneDrive",
@@ -63,6 +65,8 @@ if __name__  == "__main__":
     input_filename = os.path.join(top_dir, "exp_aug.xlsx")
     # excel2fig = Excel2Fig(input_filename)
     excel2fig = Excel2Fig(sys.argv[1])
+
+    # sys.argv[2] is kmin_kmax for exp_kmin_kmax_all.xlsx. 
     # excel2fig.repeat('N')
     excel2fig.repeat(sys.argv[2])
 
