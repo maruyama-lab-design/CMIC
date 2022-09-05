@@ -57,7 +57,7 @@ class Excel2Fig:
 
         plt.grid(axis="y",ls='--')
         # plt.show()
-        fig.savefig(os.path.join(self.output_dir, "img_" + self.output_file_basename + "_" + measure + ".pdf"))
+        fig.savefig(os.path.join(self.output_dir, "img_" + self.output_file_basename + "_" + measure + ".png"))
 
 if __name__  == "__main__":
     # top_dir = os.path.join("~", "OneDrive",
