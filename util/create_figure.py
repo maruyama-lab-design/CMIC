@@ -5,7 +5,7 @@ import sys
 import matplotlib.pyplot as plt
 
 class Excel2Fig:
-    def __init__(self, input_filename):
+    def __init__(self, input_filename, output_dir):
         _, ext = os.path.splitext(input_filename)
         if ext == ".xlsx":
             self.df = pd.read_excel(input_filename)
@@ -16,6 +16,8 @@ class Excel2Fig:
         
         self.output_file_basename = os.path.splitext(os.path.basename(input_filename))[0].split("_", 1)[1]
         print(self.output_file_basename)
+        print(os.getcwd())
+        self.output_dir = output_dir
 
     def remove_empty_rows(self):
         c = self.df.test_F_mean
@@ -55,19 +57,20 @@ class Excel2Fig:
 
         plt.grid(axis="y",ls='--')
         # plt.show()
-        # fig.savefig("img_" + self.output_file_basename + "_" + measure + ".pdf")
-        fig.savefig("img_" + self.output_file_basename + "_" + measure + ".png")
+        fig.savefig(os.path.join(self.output_dir, "img_" + self.output_file_basename + "_" + measure + ".png"))
 
 if __name__  == "__main__":
-    top_dir = os.path.join("~", "OneDrive",
-            "work", "methyl", "source_data", "cgi_methyl_fgo_blastocyst-maternal_unmethyl-pos")
+    # top_dir = os.path.join("~", "OneDrive",
+    #         "work", "methyl", "source_data", "cgi_methyl_fgo_blastocyst-maternal_unmethyl-pos")
     # input_filename = os.path.join(top_dir, "exp_aug.xlsx")
-    input_filename = os.path.join(top_dir, "exp_aug.xlsx")
     # excel2fig = Excel2Fig(input_filename)
-    excel2fig = Excel2Fig(sys.argv[1])
-
-    # sys.argv[2] is kmin_kmax for exp_kmin_kmax_all.xlsx. 
     # excel2fig.repeat('N')
-    excel2fig.repeat(sys.argv[2])
+
+    # Specify a path to input tabular file. 
+    excel2fig = Excel2Fig(sys.argv[1], sys.argv[2])
+
+    # Specify a column name of the above tabular file, the values in which specifies the points on the X-axis.  
+    # For example, in exp_aug.xlsx, we use 'N' (degree of augmentation). 
+    excel2fig.repeat(sys.argv[3])
 
 

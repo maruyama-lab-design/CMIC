@@ -266,7 +266,7 @@ def make(args):
     # df_all_seq = df_all_seq.query("seq_len >= 200")
     # 
     CGI_min_len = 200
-    df_all_seq = df_all_seq.query("endpos - startpos >= CGI_min_len")
+    df_all_seq = df_all_seq.query("endpos - startpos >= {}".format(CGI_min_len))
     print(f'After {len(df_all_seq)}')
 
     # generate input_data.csv using splitDNA2vec algorithm
