@@ -30,9 +30,10 @@ def load_dataset(input_filename, M_lower_bound, U_upper_bound):
     # Unmethylated and methylated CGIs are labeled as 1 and 0. 
     df.loc[df['beta_2'] >= M_lower_bound, 'label'] = 0  # 1
     df.loc[df['beta_2'] < U_upper_bound, 'label'] = 1   # 0
-    print(sum(df['label']==1))
-    print(sum(df['label']==0))
-    print(sum(df['label']==-1))
+
+    print('Positive = {}'.format(sum(df['label']==1)))
+    print('Negative = {}'.format(sum(df['label']==0)))
+    print('NA = {}'.format(sum(df['label']==-1)))
     df = df[df.label != -1]
 
     if 'chrom' in df.columns and 'startpos' in df.columns:

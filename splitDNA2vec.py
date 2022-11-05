@@ -255,7 +255,7 @@ def make(args):
     else:
         df_all_seq = data_loader.load_dataset(args["input_file"], args["M_lower_bound"], args["U_upper_bound"])
 
-    print(f'Before {len(df_all_seq)}')
+    # print(f'Before {len(df_all_seq)}')
     #
     # The next block has a bug that 
     # every row has the same sequence length
@@ -266,8 +266,8 @@ def make(args):
     # df_all_seq = df_all_seq.query("seq_len >= 200")
     # 
     CGI_min_len = 200
-    df_all_seq = df_all_seq.query("endpos - startpos >= CGI_min_len")
-    print(f'After {len(df_all_seq)}')
+    df_all_seq = df_all_seq.query("endpos - startpos >= @CGI_min_len")
+    # print(f'After {len(df_all_seq)}')
 
     # generate input_data.csv using splitDNA2vec algorithm
     # Namely, the next code is specialized for extracting random (kmin, kmax)-mer sequences, 

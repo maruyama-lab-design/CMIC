@@ -28,8 +28,20 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["/home/om/OneDrive/work/methyl/source_data/cgi_methyl_fgo_blastocyst-maternal-CpGcluster/out_FGoocyte_and_Blastocyst_Maternal.csv", 
-                "word2vec"
+            "args": ["/home/om/OneDrive/work/methyl/source_data/cgi_methyl_fgo_blastocyst-maternal-CpGcluster_50_1e-5/out_FGoocyte_and_Blastocyst_Maternal.csv", 
+                "word2vec",
+                "--vec_size", "20"
+            ] 
+        },
+        {
+            "name": "CMIC+CpGcluster",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": ["/home/om/OneDrive/work/methyl/source_data/cgi_methyl_fgo_blastocyst-maternal-CpGcluster_50_1e-5/k4_12_aug1000_v10_w10_e10_a0.025_mina0.0001_stride0", 
+            "-o", 
+            "/home/om/OneDrive/work/methyl/source_data/cgi_methyl_fgo_blastocyst-maternal-CpGcluster_50_1e-5/k4_12_aug1000_v20_w10_e10_a0.025_mina0.0001_stride0/output.csv", 
             ] 
         },
     ]
